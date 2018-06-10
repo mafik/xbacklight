@@ -1,16 +1,3 @@
-# xbacklight
-
-Golang functions for querying and setting X11 backlight.
-
-## Installation
-
-```bash
-go get mrogalski.eu/go/xbacklight
-```
-
-## Usage
-
-```golang
 package main
 
 import (
@@ -32,4 +19,3 @@ func main() {
 	}
 	fmt.Println("Current backlight:", value)
 }
-```
