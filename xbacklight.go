@@ -1,3 +1,28 @@
+// Functions for querying and setting X11 backlight.
+//
+// Sample usage:
+//
+//  package main
+//
+//  import (
+//  	"fmt"
+//
+//  	"mrogalski.eu/go/xbacklight"
+//  )
+//
+//  func main() {
+//  	backlighter, err := xbacklight.NewBacklighterPrimaryScreen()
+//  	if err != nil {
+//  		fmt.Println("Error:", err)
+//  		return
+//  	}
+//  	value, err := backlighter.Get()
+//  	if err != nil {
+//  		fmt.Println("Couldn't query backlight:", err)
+//  		return
+//  	}
+//  	fmt.Println("Current backlight:", value)
+//  }
 package xbacklight // import "mrogalski.eu/go/xbacklight"
 
 import (
@@ -20,6 +45,7 @@ type Backlighter interface {
 	Set(float64) error
 }
 
+// Connect to the X11 server, and returns a Backlighter for the primary screen.
 func NewBacklighterPrimaryScreen() (Backlighter, error) {
 	x, err := xgbutil.NewConn()
 	if err != nil {
@@ -35,6 +61,11 @@ func NewBacklighterPrimaryScreen() (Backlighter, error) {
 	return NewBacklighter(x, output)
 }
 
+// Create a Backlighter for a given X11 connection and RANDR output.
+//
+// Before calling this method initialize the randr extension by calling:
+//
+//  randr.Init(x.Conn())
 func NewBacklighter(x *xgbutil.XUtil, output randr.Output) (Backlighter, error) {
 	min, max, err := backlightRange(x, output)
 	if err != nil {
